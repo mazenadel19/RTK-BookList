@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { logInsert } from "./reportSlice";
 
 export const getBooks = createAsyncThunk(
   "book/getBooks",
@@ -22,7 +23,8 @@ export const getBooks = createAsyncThunk(
 export const postBook = createAsyncThunk(
   "book/postBook",
   async (bookData, thunkAPI) => {
-    const { rejectWithValue, getState } = thunkAPI;
+    const { rejectWithValue, getState, dispatch } = thunkAPI;
+    const uuid = Math.random().toString(16).slice(2);
     try {
       const { auth } = getState();
       bookData.username = auth.username;
@@ -37,11 +39,15 @@ export const postBook = createAsyncThunk(
         }
       );
       const data = await response.json();
+
+      dispatch(logInsert({ id: uuid, name: "inserBook", status: "success" }));
+
       if (!Object.keys(data).length) {
         throw new Error("Network Error, Couldn't post your book");
       }
       return data;
     } catch (error) {
+      dispatch(logInsert({ id: uuid, name: "inserBook", status: "failed" }));
       return rejectWithValue(error.message);
     }
   }
