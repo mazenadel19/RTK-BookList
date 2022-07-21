@@ -10,7 +10,7 @@ const PostContainer = () => {
   const { books, isLoading, isError } = useSelector((state) => state.books);
   const dispatch = useDispatch();
   const first = useRef(true);
-  console.log({ books, isLoading, isError });
+  
   useEffect(() => {
     if (first.current) {
       dispatch(getBooks());

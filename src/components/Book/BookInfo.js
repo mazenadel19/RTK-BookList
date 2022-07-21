@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 
 const BookInfo = () => {
+
   return (
     <Fragment>
       <h2>Book Details</h2>

@@ -10,7 +10,33 @@ export const getBooks = createAsyncThunk(
       );
       const data = await response.json();
       if (!data.length) {
-        throw new Error("Network Error, Couldn't fetch your books");
+        throw new Error("Network Error, Couldn't get your books");
+      }
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const postBook = createAsyncThunk(
+  "book/postBook",
+  async (bookData, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const response = await fetch(
+        "https://redux-shoppin-cart-json-server.herokuapp.com/books",
+        {
+          method: "POST",
+          body: JSON.stringify(bookData),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      const data = await response.json();
+      if (!Object.keys(data).length) {
+        throw new Error("Network Error, Couldn't post your book");
       }
       return data;
     } catch (error) {
@@ -25,6 +51,7 @@ const bookSlice = createSlice({
   name: "book",
   initialState,
   extraReducers: {
+    // getBooks
     [getBooks.pending]: (state, action) => {
       // console.log(current(state));
       state.books = [];
@@ -37,6 +64,23 @@ const bookSlice = createSlice({
       state.isError = false;
     },
     [getBooks.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.isError = action.payload;
+    },
+
+    // postBook
+    [postBook.pending]: (state, action) => {
+      state.isLoading = true;
+      state.isError = false;
+    },
+    [postBook.fulfilled]: (state, action) => {
+      console.log(action);
+
+      state.books.unshift(action.payload);
+      state.isLoading = false;
+      state.isError = false;
+    },
+    [postBook.rejected]: (state, action) => {
       state.isLoading = false;
       state.isError = action.payload;
     },
