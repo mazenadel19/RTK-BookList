@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getBooks = createAsyncThunk(
   "book/getBooks",
@@ -49,11 +49,11 @@ export const postBook = createAsyncThunk(
 
 export const deleteBook = createAsyncThunk(
   "book/deleteBook",
-  async (id, thunkAPI) => {
+  async (book, thunkAPI) => {
     const { rejectWithValue } = thunkAPI;
     try {
       const response = await fetch(
-        `https://redux-shoppin-cart-json-server.herokuapp.com/books/${id}`,
+        `https://redux-shoppin-cart-json-server.herokuapp.com/books/${book.id}`,
         {
           method: "DELETE",
           headers: {
@@ -65,7 +65,7 @@ export const deleteBook = createAsyncThunk(
       if (Object.keys(data).length > 0) {
         throw new Error("Network Error, Couldn't delete your book");
       }
-      return id;
+      return book;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -118,7 +118,7 @@ const bookSlice = createSlice({
     [deleteBook.fulfilled]: (state, action) => {
       state.isLoading = false;
       state.isError = false;
-      state.books = state.books.filter((b) => b.id !== action.payload);
+      state.books = state.books.filter((b) => b.id !== action.payload.id);
     },
     [deleteBook.rejected]: (state, action) => {
       state.isLoading = false;

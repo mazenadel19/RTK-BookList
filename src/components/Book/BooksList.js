@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteBook } from "../../store/slices/bookSlice";
 
 function Book({ book, isLoading }) {
-
   const dispatch = useDispatch();
   const { username } = useSelector((state) => state.auth);
 
   const handleDelete = () => {
-    dispatch(deleteBook(book.id));
+    dispatch(deleteBook(book))
+      .unwrap()
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -34,7 +36,6 @@ function Book({ book, isLoading }) {
 }
 
 function Books({ books, isLoading }) {
-
   if (books?.length === 0) {
     return <p>your book list is empty</p>;
   }
@@ -45,7 +46,6 @@ function Books({ books, isLoading }) {
 }
 
 const BooksList = ({ books, isLoading }) => {
-
   return (
     <div>
       <h2>Books List</h2>
