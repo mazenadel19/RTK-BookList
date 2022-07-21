@@ -9,7 +9,7 @@ export const getBooks = createAsyncThunk(
         "https://redux-shoppin-cart-json-server.herokuapp.com/books"
       );
       const data = await response.json();
-      if (!data.length) {
+      if (typeof data.length !== "number") {
         throw new Error("Network Error, Couldn't get your books");
       }
       return data;
@@ -22,8 +22,10 @@ export const getBooks = createAsyncThunk(
 export const postBook = createAsyncThunk(
   "book/postBook",
   async (bookData, thunkAPI) => {
-    const { rejectWithValue } = thunkAPI;
+    const { rejectWithValue, getState } = thunkAPI;
     try {
+      const { auth } = getState();
+      bookData.username = auth.username;
       const response = await fetch(
         "https://redux-shoppin-cart-json-server.herokuapp.com/books",
         {

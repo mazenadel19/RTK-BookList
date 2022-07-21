@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { postBook } from "../store/slices/bookSlice";
 
 const initialState = { title: "", price: "", description: "" };
@@ -7,6 +7,7 @@ const initialState = { title: "", price: "", description: "" };
 const Addform = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState(initialState);
+  const { isLoggedIn } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,14 +26,15 @@ const Addform = () => {
   };
 
   //stops type number input from accepting "e"
-  const keyPressHandler = (Event) => {
-    const Regex = new RegExp("[0-9]")
-    const keyCode = Event.keyCode || Event.which;
-    const keyValue = String.fromCharCode(keyCode);
-    if (!Regex.test(keyValue)) {
-        Event.preventDefault();
-    }
-}
+  // TODO handle backspace and numbers on the capslock side
+  // const keyPressHandler = (Event) => {
+  //   const Regex = new RegExp("[0-9]");
+  //   const keyCode = Event.keyCode || Event.which;
+  //   const keyValue = String.fromCharCode(keyCode);
+  //   if (!Regex.test(keyValue)) {
+  //     Event.preventDefault();
+  //   }
+  // };
 
   return (
     <div className="row">
@@ -58,7 +60,7 @@ const Addform = () => {
               id="price"
               required
               onChange={(e) => handleChange(e, "price")}
-              onKeyDown={keyPressHandler}
+              // onKeyDown={keyPressHandler}
               value={formData.price}
             />
           </div>
@@ -73,7 +75,11 @@ const Addform = () => {
               value={formData.description}
             ></textarea>
           </div>
-          <button type="submit" className="btn btn-primary">
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={!isLoggedIn}
+          >
             Submit
           </button>
         </form>

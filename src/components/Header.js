@@ -1,8 +1,15 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../store/slices/authSlice";
 
 const Header = () => {
   const { isError } = useSelector((state) => state.books);
+  const dispatch = useDispatch();
+  const { isLoggedIn } = useSelector((state) => state.auth);
+
+  const handlelogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <>
@@ -14,9 +21,15 @@ const Header = () => {
       <nav className="navbar navbar-dark bg-dark">
         <span className="navbar-brand mb-0 h1">My Books</span>
 
-        <button className="btn btn-outline-primary" type="submit">
-          Log In
-        </button>
+        {isLoggedIn && (
+          <button
+            className="btn btn-outline-primary"
+            type="button"
+            onClick={handlelogout}
+          >
+            Logout
+          </button>
+        )}
       </nav>
     </>
   );
