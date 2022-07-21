@@ -7,7 +7,7 @@ const initialState = { title: "", price: "", description: "" };
 const Addform = () => {
   const dispatch = useDispatch();
   const [formData, setFormData] = useState(initialState);
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { isLoading } = useSelector((state) => state.books);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -78,7 +78,7 @@ const Addform = () => {
           <button
             type="submit"
             className="btn btn-primary"
-            disabled={!isLoggedIn}
+            disabled={isLoading}
           >
             Submit
           </button>

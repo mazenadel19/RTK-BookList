@@ -7,7 +7,7 @@ import { getBooks } from "../../store/slices/bookSlice";
 import "./book.css";
 
 const PostContainer = () => {
-  const { books, isLoading, isError } = useSelector((state) => state.books);
+  const { books, isLoading } = useSelector((state) => state.books);
   const dispatch = useDispatch();
   const first = useRef(true);
   
@@ -23,7 +23,7 @@ const PostContainer = () => {
       <hr className="my-5" />
       <div className="row">
         <div className="col">
-          <BooksList books={books} isLoading={isLoading} isError={isError} />
+          <BooksList books={books} isLoading={isLoading} />
         </div>
         <div className="col side-line">
           <BookInfo books={books} />

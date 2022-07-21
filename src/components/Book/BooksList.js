@@ -1,44 +1,56 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteBook } from "../../store/slices/bookSlice";
 
-function Book({ title }) {
-  const { isLoggedIn } = useSelector((state) => state.auth);
+function Book({ book, isLoading }) {
+
+  const dispatch = useDispatch();
+  const { username } = useSelector((state) => state.auth);
+
+  const handleDelete = () => {
+    dispatch(deleteBook(book.id));
+  };
 
   return (
     <li className="list-group-item d-flex  justify-content-between align-items-center">
-      <div>{title}</div>
+      <div>{book.title}</div>
       <div className="btn-group" role="group">
-        <button type="button" className="btn btn-primary" disabled={!isLoggedIn}>
+        <button type="button" className="btn btn-primary" disabled={isLoading}>
           Read
         </button>
-        <button type="button" className="btn btn-danger" disabled={!isLoggedIn}>
-          Delete
-        </button>
+        {book.username === username && (
+          <button
+            type="button"
+            className="btn btn-danger"
+            disabled={isLoading}
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
+        )}
       </div>
     </li>
   );
 }
 
-function Books({ books, isError }) {
-  if (isError) {
-    return <p>There's no books available!</p>;
+function Books({ books, isLoading }) {
+
+  if (books?.length === 0) {
+    return <p>your book list is empty</p>;
   }
 
-  return books?.map(({ title, id }) => {
-    return <Book key={id} title={title} />;
+  return books?.map((book) => {
+    return <Book key={book.id} book={book} isLoading={isLoading} />;
   });
 }
 
-const BooksList = ({ books, isLoading, isError }) => {
+const BooksList = ({ books, isLoading }) => {
+
   return (
     <div>
       <h2>Books List</h2>
       <ul className="list-group">
-        {isLoading ? (
-          <p>Fetching...</p>
-        ) : (
-          <Books books={books} isError={isError} />
-        )}
+        <Books books={books} isLoading={isLoading} />
       </ul>
     </div>
   );
