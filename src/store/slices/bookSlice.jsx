@@ -7,7 +7,7 @@ export const getBooks = createAsyncThunk(
     const { rejectWithValue } = thunkAPI;
     try {
       const response = await fetch(
-        "https://redux-shoppin-cart-json-server.herokuapp.com/books"
+        "https://everlasting-pond-sunday.glitch.me/books"
       );
       const data = await response.json();
       if (typeof data.length !== "number") {
@@ -29,7 +29,7 @@ export const postBook = createAsyncThunk(
       const { auth } = getState();
       bookData.username = auth.username;
       const response = await fetch(
-        "https://redux-shoppin-cart-json-server.herokuapp.com/books",
+        "https://everlasting-pond-sunday.glitch.me/books",
         {
           method: "POST",
           body: JSON.stringify(bookData),
@@ -59,7 +59,7 @@ export const deleteBook = createAsyncThunk(
     const { rejectWithValue } = thunkAPI;
     try {
       const response = await fetch(
-        `https://redux-shoppin-cart-json-server.herokuapp.com/books/${book.id}`,
+        `https://everlasting-pond-sunday.glitch.me/books/${book.id}`,
         {
           method: "DELETE",
           headers: {
